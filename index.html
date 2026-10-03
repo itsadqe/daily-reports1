@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle">گزارش کار روزانه - Sadqe Shabani</title>
+    <!-- CSS Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Fonts -->
+    <link href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Persian Datepicker CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/css/persian-datepicker.min.css">
+    
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --muted-color: #6c757d;
+            --border-color: #dee2e6;
+            --input-bg: #ffffff;
+            --input-color: #212529;
+            --pdf-bg: #ffffff;
+            --pdf-border: #ccc;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #050814;
+            --card-bg: #0b1120;
+            --text-color: #f8fafc;
+            --muted-color: #94a3b8;
+            --border-color: #1e293b;
+            --input-bg: #030712;
+            --input-color: #ffffff;
+            --pdf-bg: #0b1120;
+            --pdf-border: #334155;
+        }
+
+        [data-theme="dark"] body {
+            background-color: #050814;
+            background-image: linear-gradient(rgba(5, 8, 20, 0.82), rgba(5, 8, 20, 0.82)), 
+                              url('https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg/1920px-Van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
+
+        .form-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg) !important;
+            color: var(--input-color) !important;
+            border-color: var(--border-color) !important;
+        }
+        
+        .form-control::placeholder {
+            color: var(--muted-color);
+            opacity: 0.7;
+        }
+
+        .form-control:focus, .form-select:focus {
+            background-color: var(--input-bg) !important;
+            color: var(--input-color) !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        }
+
+        [data-theme="dark"] .bg-light {
+            background-color: #0f172a !important;
+            color: var(--text-color) !important;
+            border-color: var(--border-color) !important;
+        }
+        [data-theme="dark"] .text-muted {
+            color: #94a3b8 !important;
+        }
+        [data-theme="dark"] .text-dark {
+            color: #f8fafc !important;
+        }
+
+        .step-section { display: none; }
+        .step-section.active { display: block; }
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        .step-pill {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            transition: all 0.3s;
+            color: var(--text-color);
+        }
+        .step-pill.active { border-color: #3b82f6; background: #3b82f6; color: white; }
+        .step-pill.completed { border-color: #10b981; background: #10b981; color: white; }
+
+        /* Fullscreen Studiestimer Overlay */
+        #focusOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #050814;
+            color: #ffffff;
+            z-index: 99999;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px 30px;
+            direction: ltr;
+            font-family: 'Poppins', system-ui, -apple-system, sans-serif;
+            transition: all 0.25s ease;
+        }
+        #focusOverlay.active { display: flex; }
+        
+        /* حالت مینی دست‌نخورده و فیکس */
+        #focusOverlay.mini-mode {
+            top: auto;
+            left: auto;
+            right: 25px;
+            bottom: 25px;
+            width: 380px;
+            height: 260px;
+            border-radius: 16px;
+            background-color: #0b1120;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.85);
+            padding: 16px 20px;
+        }
+        #focusOverlay.mini-mode .focus-top-bar { margin-bottom: 8px; }
+        #focusOverlay.mini-mode .studiestimer-nav,
+        #focusOverlay.mini-mode .preset-pills,
+        #focusOverlay.mini-mode .timer-subtitle,
+        #focusOverlay.mini-mode .timer-labels,
+        #focusOverlay.mini-mode #focusCourseBadge,
+        #focusOverlay.mini-mode .top-left-clock-container { display: none !important; }
+        
+        #focusOverlay.mini-mode .big-timer-digits { font-size: 3.5rem; letter-spacing: 2px; margin: 12px 0; }
+        #focusOverlay.mini-mode .start-timer-btn-main { padding: 8px 24px; font-size: 0.9rem; }
+        #focusOverlay.mini-mode .secondary-controls { margin-top: 8px; }
+        #focusOverlay.mini-mode .mini-expand-btn { display: inline-block !important; }
+        .mini-expand-btn { display: none; }
+
+        .focus-top-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        
+        /* کانتینر ساعت دیجیتال رسمی و بزرگ در حالت عادی/تمام صفحه */
+        .top-left-clock-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid #334155;
+            padding: 15px 25px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .digital-time-main {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 2px;
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+        }
+        .date-info-sub {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #94a3b8;
+            letter-spacing: 0.5px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .studiestimer-nav { background-color: #0b1120; border: 1px solid #1e293b; border-radius: 30px; padding: 4px; display: flex; gap: 4px; }
+        .studiestimer-nav-btn { background: transparent; border: none; color: #94a3b8; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 500; transition: all 0.2s; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .studiestimer-nav-btn:hover { color: #fff; }
+        .studiestimer-nav-btn.active { background-color: #1e293b; color: #ffffff; }
+        .studiestimer-nav-btn.action-btn { border: 1px solid #334155; }
+
+        .timer-center-container { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: auto 0; }
+        .timer-subtitle { font-size: 0.8rem; letter-spacing: 2px; color: #64748b; text-transform: uppercase; font-weight: 600; margin-bottom: 12px; }
+        .big-timer-digits { font-size: clamp(4.5rem, 14vw, 12rem); font-weight: 400; color: #cbd5e1; line-height: 1; letter-spacing: 6px; user-select: none; font-variant-numeric: tabular-nums; }
+        .timer-labels { display: flex; justify-content: center; gap: clamp(2.5rem, 9vw, 9rem); margin-top: 10px; margin-bottom: 25px; }
+        .timer-labels span { font-size: 0.75rem; letter-spacing: 2px; color: #4a5568; text-transform: uppercase; font-weight: 600; }
+        .preset-pills { display: flex; align-items: center; gap: 8px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
+        .preset-btn { background: #0b1120; border: 1px solid #1e293b; color: #94a3b8; padding: 5px 16px; border-radius: 15px; font-size: 0.82rem; cursor: pointer; transition: all 0.2s; }
+        .preset-btn:hover { color: #fff; border-color: #475569; }
+        .custom-time-input { width: 80px; background: #0b1120; border: 1px solid #334155; color: #fff; border-radius: 15px; padding: 4px 10px; font-size: 0.8rem; text-align: center; }
+        .start-timer-btn-main { background-color: #ffffff; color: #000000; border: none; border-radius: 30px; padding: 12px 50px; font-weight: 600; font-size: 1rem; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 20px rgba(255,255,255,0.1); }
+        .start-timer-btn-main:hover { background-color: #e2e8f0; transform: translateY(-1px); }
+        .secondary-controls { display: flex; gap: 12px; margin-top: 15px; }
+        .secondary-btn { background: transparent; border: 1px solid #334155; color: #cbd5e1; padding: 6px 18px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; }
+        .secondary-btn:hover { color: #fff; border-color: #94a3b8; }
+
+        #pdf-template {
+            background: var(--pdf-bg);
+            color: var(--text-color);
+            padding: 20px;
+            border: 1px solid var(--pdf-border);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .pdf-header { border-bottom: 2px solid var(--text-color); padding-bottom: 8px; margin-bottom: 15px; }
+        .pdf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px; }
+        .pdf-field { border-bottom: 1px dotted var(--muted-color); padding: 2px 0; }
+        .pdf-course-box { border: 1px solid var(--pdf-border); border-radius: 6px; padding: 10px; margin-bottom: 12px; background: var(--card-bg); page-break-inside: avoid; }
+        .pdf-course-title { font-weight: bold; border-bottom: 1px solid var(--pdf-border); padding-bottom: 4px; margin-bottom: 8px; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #pdf-template, #pdf-template * { visibility: visible; }
+            #pdf-template {
+                position: absolute; left: 0; top: 0; width: 100%; border: none; padding: 0;
+                background: white !important; color: black !important;
+            }
+            .no-print { display: none !important; }
+            @page { size: A4; margin: 15mm; }
+        }
+    </style>
+</head>
+<body class="py-4">
+
+<!-- Studiestimer Overlay -->
+<div id="focusOverlay">
+    <div class="focus-top-bar">
+        <div class="top-left-clock-container">
+            <div class="digital-time-main" id="digital-clock">00:00:00</div>
+            <div class="date-info-sub">
+                <span id="day-name-en">Sunday</span>
+                <span>•</span>
+                <span id="shamsi-date-display">1405/--/--</span>
+            </div>
+        </div>
+
+        <div class="studiestimer-nav">
+            <button class="studiestimer-nav-btn active" id="tab-stopwatch" onclick="switchMode('stopwatch')"><i class="fa-solid fa-clock"></i> Stopwatch</button>
+            <button class="studiestimer-nav-btn" id="tab-timer" onclick="switchMode('timer')"><i class="fa-solid fa-hourglass-start"></i> Timer</button>
+            <button class="studiestimer-nav-btn action-btn" onclick="toggleFullscreen()"><i class="fa-solid fa-expand"></i> Focus Mode</button>
+            <button class="studiestimer-nav-btn action-btn" onclick="toggleMiniMode(true)"><i class="fa-solid fa-window-minimize"></i> Mini</button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-dark text-secondary border border-secondary px-3 py-2 fw-normal" id="focusCourseBadge">Course 1</span>
+            <button class="btn btn-link text-secondary p-0 border-0 ms-2 mini-expand-btn" onclick="toggleMiniMode(false)" title="Expand"><i class="fa-solid fa-up-right-and-down-left-from-center fs-5"></i></button>
+            <button class="btn btn-link text-secondary p-0 border-0 ms-2" onclick="closeFocusMode()" title="Close"><i class="fa-solid fa-xmark fs-4"></i></button>
+        </div>
+    </div>
+
+    <div class="timer-center-container">
+        <div class="timer-subtitle" id="modeSubtitle">STOPWATCH MODE</div>
+        <div class="big-timer-digits" id="timerDisplay">0 : 0 : 0</div>
+        <div class="timer-labels" id="timerLabels">
+            <span>HOURS</span>
+            <span>MINUTES</span>
+            <span>SECONDS</span>
+        </div>
+
+        <div class="preset-pills" id="presetPills" style="display: none;">
+            <button class="preset-btn" onclick="setPresetMins(15)">15m</button>
+            <button class="preset-btn" onclick="setPresetMins(25)">25m</button>
+            <button class="preset-btn" onclick="setPresetMins(45)">45m</button>
+            <button class="preset-btn" onclick="setPresetMins(60)">1h</button>
+            <button class="preset-btn" onclick="setPresetMins(120)">2h</button>
+            <div class="d-flex align-items-center gap-1 ms-2">
+                <input type="number" id="customMinsInput" class="custom-time-input" placeholder="Min" min="1">
+                <button class="preset-btn" onclick="setCustomMins()">Set</button>
+            </div>
+        </div>
+
+        <button class="start-timer-btn-main" id="startBtn" onclick="toggleStartPause()">
+            <i class="fa-solid fa-play" id="startBtnIcon"></i> <span id="startBtnText">Start Stopwatch</span>
+        </button>
+
+        <div class="secondary-controls">
+            <button class="secondary-btn" onclick="resetTimer()"><i class="fa-solid fa-rotate-right me-1"></i> Reset</button>
+            <button class="secondary-btn text-success border-success" onclick="applyTimerToCourse()"><i class="fa-solid fa-check me-1"></i> Save to Lesson</button>
+        </div>
+    </div>
+
+    <div class="text-center text-secondary small pb-1">
+        <span style="letter-spacing: 1px;">STUDIESTIMER FOCUS MODE</span>
+    </div>
+</div>
+
+<div class="container" style="max-width: 900px;">
+    <!-- Theme Toggle & Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4 no-print">
+        <div>
+            <h2 class="fw-bold text-primary mb-1"><i class="fa-solid fa-clipboard-list me-2"></i>سامانه ثبت و صدور گزارش کار روزانه</h2>
+        </div>
+        <button type="button" class="btn btn-outline-secondary rounded-pill px-3" id="themeToggleBtn" onclick="toggleTheme()">
+            <i class="fa-solid fa-moon me-1" id="themeIcon"></i> <span id="themeText">حالت تاریک</span>
+        </button>
+    </div>
+
+    <div class="card mb-4 p-3 no-print">
+        <div class="step-indicator">
+            <div class="step-pill active" id="pill-1">۱</div>
+            <div class="step-pill" id="pill-2">۲</div>
+            <div class="step-pill" id="pill-3">۳</div>
+            <div class="step-pill" id="pill-4">۴</div>
+            <div class="step-pill" id="pill-5">۵</div>
+            <div class="step-pill" id="pill-6">۶</div>
+        </div>
+        <div class="d-flex justify-content-between text-muted small px-1">
+            <span>اطلاعات کلی</span>
+            <span>درس ۱</span>
+            <span>درس ۲</span>
+            <span>درس ۳</span>
+            <span>درس ۴</span>
+            <span>جمع‌بندی و PDF</span>
+        </div>
+    </div>
+
+    <div class="card p-4 no-print">
+        <form id="reportForm">
+
+            <!-- STEP 1: General Info -->
+            <div class="step-section active" id="step-1">
+                <h4 class="mb-3 border-bottom pb-2 text-secondary"><i class="fa-solid fa-user-gear me-2"></i>مرحله اول: اطلاعات عمومی و تایم‌ها</h4>
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">نوع گزارش</label>
+                        <input type="text" class="form-control fw-bold bg-light" id="reportType" value="روزانه" readonly>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">نام دانش‌آموز</label>
+                        <input type="text" class="form-control save-auto" id="studentName" value="Sadqe Shabani">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">روز هفته</label>
+                        <select class="form-select save-auto" id="dayName">
+                            <option value="شنبه">شنبه</option>
+                            <option value="یکشنبه">یکشنبه</option>
+                            <option value="دوشنبه">دوشنبه</option>
+                            <option value="سه‌شنبه" selected>سه‌‌شنبه</option>
+                            <option value="چهارشنبه">چهارشنبه</option>
+                            <option value="پنج‌شنبه">پنج‌شنبه</option>
+                            <option value="جمعه">جمعه</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">تاریخ امروز (انتخابی شمسی)</label>
+                        <input type="text" class="form-control save-auto" id="reportDate" placeholder="1405/--/--">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">گام</label>
+                        <select class="form-select save-auto" id="stepName">
+                            <option value="گام اول">گام اول</option>
+                            <option value="گام دوم">گام دوم</option>
+                            <option value="گام سوم">گام سوم</option>
+                            <option value="گام چهارم">گام چهارم</option>
+                            <option value="گام پنجم">گام پنجم</option>
+                            <option value="گام ششم">گام ششم</option>
+                            <option value="گام هفتم">گام هفتم</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">از جلسه مشاوره</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary text-white border-secondary">سه‌شنبه</span>
+                            <input type="text" class="form-control save-auto" id="fromSession" placeholder="1405/--/--">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">تا جلسه مشاوره</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary text-white border-secondary">سه‌شنبه</span>
+                            <input type="text" class="form-control save-auto" id="toSession" placeholder="1405/--/--">
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">ساعت خواب دیشب</label>
+                        <input type="time" class="form-control save-auto sleep-calc-field" id="sleepTime" value="23:00">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">ساعت بیدار شدن امروز</label>
+                        <input type="time" class="form-control save-auto sleep-calc-field" id="wakeTime" value="06:30">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">مجموع تایم خواب (محاسبه خودکار)</label>
+                        <input type="text" class="form-control save-auto bg-light fw-bold text-primary" id="totalSleep" readonly>
+                    </div>
+
+                    <div class="col-md-4"><label class="form-label">تایم شروع درس</label><input type="text" class="form-control save-auto" id="studyStartTime" placeholder="08:00"></div>
+                    <div class="col-md-4"><label class="form-label">جمع ساعات گوشی/لپ‌تاپ (غیر درسی)</label><input type="text" class="form-control save-auto" id="screenTime"></div>
+                    <div class="col-md-4"><label class="form-label">مجموع تایم خواب عصرانه</label><input type="text" class="form-control save-auto" id="napTime"></div>
+                    <div class="col-md-12"><label class="form-label">جمع ساعات بیرون رفتن</label><input type="text" class="form-control save-auto" id="outTime"></div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Course 1 -->
+            <div class="step-section" id="step-2">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4 class="text-secondary m-0"><i class="fa-solid fa-book-open me-2"></i>گزارش درس اول (۱)</h4>
+                    <button type="button" class="btn btn-outline-secondary border" onclick="openFocusMode(1)"><i class="fa-solid fa-stopwatch text-success me-1"></i> اجرای کرنومتر مطالعه</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12"><label class="form-label">نام درس</label><input type="text" class="form-control save-auto" id="c1_name" placeholder="مثلاً: زیست‌شناسی"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت شروع</label><input type="time" class="form-control calc-time1 save-auto" id="c1_start"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت پایان</label><input type="time" class="form-control calc-time1 save-auto" id="c1_end"></div>
+                    <div class="col-md-3"><label class="form-label">تایم کل (ساعت)</label><input type="text" class="form-control save-auto" id="c1_totalTime" readonly></div>
+                    <div class="col-md-3"><label class="form-label">تایم مفید (کرنومتر)</label><input type="text" class="form-control save-auto" id="c1_usefulTime" placeholder="مثلا 01:30" oninput="calculateCourseTime(1)"></div>
+                    
+                    <div class="col-md-12">
+                        <div class="p-3 bg-light rounded border d-flex justify-content-around text-center">
+                            <div><small class="text-muted d-block">استراحت / اتلاف وقت</small><b id="c1_wastedDisplay" class="text-danger">-</b></div>
+                            <div><small class="text-muted d-block">بازدهی مطالعه</small><b id="c1_efficiencyDisplay" class="text-success">-</b></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold m-0">پارت‌های تست‌زنی (هر پارت با درصد مجزا)</label>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestRow(1)"><i class="fa-solid fa-plus me-1"></i>افزودن پارت تست</button>
+                        </div>
+                        <div id="c1_testRowsContainer"></div>
+                    </div>
+
+                    <div class="col-md-12"><label class="form-label">توضیحات</label><textarea class="form-control save-auto" id="c1_desc" rows="2"></textarea></div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Course 2 -->
+            <div class="step-section" id="step-3">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4 class="text-secondary m-0"><i class="fa-solid fa-book-open me-2"></i>گزارش درس دوم (۲)</h4>
+                    <button type="button" class="btn btn-outline-secondary border" onclick="openFocusMode(2)"><i class="fa-solid fa-stopwatch text-success me-1"></i> اجرای کرنومتر مطالعه</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12"><label class="form-label">نام درس</label><input type="text" class="form-control save-auto" id="c2_name" placeholder="مثلاً: شیمی"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت شروع</label><input type="time" class="form-control calc-time2 save-auto" id="c2_start"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت پایان</label><input type="time" class="form-control calc-time2 save-auto" id="c2_end"></div>
+                    <div class="col-md-3"><label class="form-label">تایم کل (ساعت)</label><input type="text" class="form-control save-auto" id="c2_totalTime" readonly></div>
+                    <div class="col-md-3"><label class="form-label">تایم مفید (کرنومتر)</label><input type="text" class="form-control save-auto" id="c2_usefulTime" placeholder="مثلا 01:30" oninput="calculateCourseTime(2)"></div>
+
+                    <div class="col-md-12">
+                        <div class="p-3 bg-light rounded border d-flex justify-content-around text-center">
+                            <div><small class="text-muted d-block">استراحت / اتلاف وقت</small><b id="c2_wastedDisplay" class="text-danger">-</b></div>
+                            <div><small class="text-muted d-block">بازدهی مطالعه</small><b id="c2_efficiencyDisplay" class="text-success">-</b></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold m-0">پارت‌های تست‌زنی (هر پارت با درصد مجزا)</label>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestRow(2)"><i class="fa-solid fa-plus me-1"></i>افزودن پارت تست</button>
+                        </div>
+                        <div id="c2_testRowsContainer"></div>
+                    </div>
+
+                    <div class="col-md-12"><label class="form-label">توضیحات</label><textarea class="form-control save-auto" id="c2_desc" rows="2"></textarea></div>
+                </div>
+            </div>
+
+            <!-- STEP 4: Course 3 -->
+            <div class="step-section" id="step-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4 class="text-secondary m-0"><i class="fa-solid fa-book-open me-2"></i>گزارش درس سوم (۳)</h4>
+                    <button type="button" class="btn btn-outline-secondary border" onclick="openFocusMode(3)"><i class="fa-solid fa-stopwatch text-success me-1"></i> اجرای کرنومتر مطالعه</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12"><label class="form-label">نام درس</label><input type="text" class="form-control save-auto" id="c3_name" placeholder="مثلاً: ریاضی"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت شروع</label><input type="time" class="form-control calc-time3 save-auto" id="c3_start"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت پایان</label><input type="time" class="form-control calc-time3 save-auto" id="c3_end"></div>
+                    <div class="col-md-3"><label class="form-label">تایم کل (ساعت)</label><input type="text" class="form-control save-auto" id="c3_totalTime" readonly></div>
+                    <div class="col-md-3"><label class="form-label">تایم مفید (کرنومتر)</label><input type="text" class="form-control save-auto" id="c3_usefulTime" placeholder="مثلا 01:30" oninput="calculateCourseTime(3)"></div>
+
+                    <div class="col-md-12">
+                        <div class="p-3 bg-light rounded border d-flex justify-content-around text-center">
+                            <div><small class="text-muted d-block">استراحت / اتلاف وقت</small><b id="c3_wastedDisplay" class="text-danger">-</b></div>
+                            <div><small class="text-muted d-block">بازدهی مطالعه</small><b id="c3_efficiencyDisplay" class="text-success">-</b></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold m-0">پارت‌های تست‌زنی (هر پارت با درصد مجزا)</label>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestRow(3)"><i class="fa-solid fa-plus me-1"></i>افزودن پارت تست</button>
+                        </div>
+                        <div id="c3_testRowsContainer"></div>
+                    </div>
+
+                    <div class="col-md-12"><label class="form-label">توضیحات</label><textarea class="form-control save-auto" id="c3_desc" rows="2"></textarea></div>
+                </div>
+            </div>
+
+            <!-- STEP 5: Course 4 -->
+            <div class="step-section" id="step-5">
+                <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                    <h4 class="text-secondary m-0"><i class="fa-solid fa-book-open me-2"></i>گزارش درس چهارم (۴)</h4>
+                    <button type="button" class="btn btn-outline-secondary border" onclick="openFocusMode(4)"><i class="fa-solid fa-stopwatch text-success me-1"></i> اجرای کرنومتر مطالعه</button>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-12"><label class="form-label">نام درس</label><input type="text" class="form-control save-auto" id="c4_name" placeholder="مثلاً: فیزیک"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت شروع</label><input type="time" class="form-control calc-time4 save-auto" id="c4_start"></div>
+                    <div class="col-md-3"><label class="form-label">ساعت پایان</label><input type="time" class="form-control calc-time4 save-auto" id="c4_end"></div>
+                    <div class="col-md-3"><label class="form-label">تایم کل (ساعت)</label><input type="text" class="form-control save-auto" id="c4_totalTime" readonly></div>
+                    <div class="col-md-3"><label class="form-label">تایم مفید (کرنومتر)</label><input type="text" class="form-control save-auto" id="c4_usefulTime" placeholder="مثلا 01:30" oninput="calculateCourseTime(4)"></div>
+
+                    <div class="col-md-12">
+                        <div class="p-3 bg-light rounded border d-flex justify-content-around text-center">
+                            <div><small class="text-muted d-block">استراحت / اتلاف وقت</small><b id="c4_wastedDisplay" class="text-danger">-</b></div>
+                            <div><small class="text-muted d-block">بازدهی مطالعه</small><b id="c4_efficiencyDisplay" class="text-success">-</b></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label class="form-label fw-bold m-0">پارت‌های تست‌زنی (هر پارت با درصد مجزا)</label>
+                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="addTestRow(4)"><i class="fa-solid fa-plus me-1"></i>افزودن پارت تست</button>
+                        </div>
+                        <div id="c4_testRowsContainer"></div>
+                    </div>
+
+                    <div class="col-md-12"><label class="form-label">توضیحات</label><textarea class="form-control save-auto" id="c4_desc" rows="2"></textarea></div>
+                </div>
+            </div>
+
+            <!-- STEP 6: Summary & Generate PDF -->
+            <div class="step-section" id="step-6">
+                <h4 class="mb-3 border-bottom pb-2 text-secondary"><i class="fa-solid fa-chart-line me-2"></i>مرحله آخر: جمع‌بندی نهایی روزانه</h4>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="p-3 bg-primary bg-opacity-10 rounded border text-center">
+                            <small class="text-primary d-block fw-bold">مجموع ساعت کل مطالعه</small>
+                            <h4 class="m-0 fw-bold text-primary mt-1" id="sumTotalTimeDisplay">00:00</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-success bg-opacity-10 rounded border text-center">
+                            <small class="text-success d-block fw-bold">مجموع ساعت مفید (کرنومتر)</small>
+                            <h4 class="m-0 fw-bold text-success mt-1" id="sumUsefulTimeDisplay">00:00</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-danger bg-opacity-10 rounded border text-center">
+                            <small class="text-danger d-block fw-bold">مجموع اتلاف وقت / استراحت</small>
+                            <h4 class="m-0 fw-bold text-danger mt-1" id="sumWastedTimeDisplay">00:00</h4>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-warning bg-opacity-10 rounded border text-center">
+                            <small class="text-dark d-block fw-bold">میانگین بازدهی کل روز</small>
+                            <h4 class="m-0 fw-bold text-dark mt-1" id="avgEfficiencyDisplay">0%</h4>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">مجموع کل تست زده شده امروز</label>
+                        <input type="text" class="form-control fw-bold text-primary" id="totalDailyTests" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">مجموع تایم مطالعه</label>
+                        <input type="text" class="form-control fw-bold text-success" id="totalStudyTime" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">درس عمومی خوانده شده</label>
+                        <input type="text" class="form-control save-auto" id="generalSubject">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">مجموع تایم خواندن درس عمومی</label>
+                        <input type="text" class="form-control save-auto" id="generalSubjectTime">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">نقاط قوت/ضعف امروز</label>
+                        <input type="text" class="form-control save-auto" id="strengthsWeaknesses">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">برنامه امروز کامل شد؟</label>
+                        <select class="form-select save-auto" id="programCompleted" onchange="toggleIncompleteBox()">
+                            <option value="بله">بله کامل شد</option>
+                            <option value="خیر">خیر کامل نشد</option>
+                            <option value="تا حدودی">تا حدودی</option>
+                        </select>
+                    </div>
+                    <!-- Incomplete Reason Box (Dynamic) -->
+                    <div class="col-md-12" id="incompleteBoxContainer" style="display: none;">
+                        <label class="form-label text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i> چه چیزهایی کامل نشد؟ (دلیل یا مباحث باقی‌‌مانده را بنویسید)</label>
+                        <textarea class="form-control border-danger save-auto" id="incompleteReason" rows="2" placeholder="مثلاً: تست‌های ریاضی از پارت دوم و مرور شیمی انجام نشد..."></textarea>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 d-flex justify-content-center gap-3">
+                    <button type="button" class="btn btn-success btn-lg px-4" onclick="downloadPDF()">
+                        <i class="fa-solid fa-print me-2"></i>چاپ / ذخیره PDF باکیفیت
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-lg px-3" onclick="clearFormData()">
+                        <i class="fa-solid fa-trash-can me-2"></i>پاکسازی فرم برای روز جدید
+                    </button>
+                </div>
+            </div>
+
+            <!-- Wizard Navigation Buttons -->
+            <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="nextPrev(-1)" disabled><i class="fa-solid fa-arrow-right me-1"></i>قبلی</button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextPrev(1)">بعدی<i class="fa-solid fa-arrow-left ms-1"></i></button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Preview Container for PDF -->
+    <div class="card mt-5 p-3">
+        <h5 class="text-center mb-3 text-muted no-print"><i class="fa-solid fa-eye me-2"></i>پیش‌نمایش فرم جهت خروجی PDF</h5>
+        <div id="pdf-template">
+            <div class="pdf-header text-center">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold m-0" id="pv-studentName">Sadqe Shabani</h5>
+                    <h4 class="fw-bold m-0">گزارش کار <span id="pv-reportType">روزانه</span></h4>
+                    <span id="pv-dayName">روز: ---</span>
+                </div>
+            </div>
+
+            <div class="pdf-grid">
+                <div class="pdf-field">تاریخ امروز: <span id="pv-reportDate">---</span></div>
+                <div class="pdf-field">از جلسه مشاوره: سه‌شنبه <span id="pv-fromSession">---</span></div>
+                <div class="pdf-field">تا جلسه مشاوره: سه‌شنبه <span id="pv-toSession">---</span></div>
+                <div class="pdf-field">گام: <span id="pv-stepName">---</span></div>
+                <div class="pdf-field">ساعت خواب دیشب: <span id="pv-sleepTime">---</span></div>
+                <div class="pdf-field">ساعت بیدار شدن امروز: <span id="pv-wakeTime">---</span></div>
+                <div class="pdf-field">مجموع تایم خواب: <span id="pv-totalSleep">---</span></div>
+                <div class="pdf-field">تایم شروع درس: <span id="pv-studyStartTime">---</span></div>
+                <div class="pdf-field">جمع ساعات گوشی/لپ‌تاپ (غیر درسی): <span id="pv-screenTime">---</span></div>
+                <div class="pdf-field">مجموع تایم خواب عصرانه: <span id="pv-napTime">---</span></div>
+                <div class="pdf-field">جمع ساعات بیرون رفتن: <span id="pv-outTime">---</span></div>
+            </div>
+
+            <hr>
+
+            <div id="pv-courses-container">
+                <div class="pdf-course-box">
+                    <div class="pdf-course-title">۱- <span id="pv-c1-name">درس اول</span></div>
+                    <div class="row g-1">
+                        <div class="col-3">ساعت شروع: <span id="pv-c1-start">-</span></div>
+                        <div class="col-3">ساعت پایان: <span id="pv-c1-end">-</span></div>
+                        <div class="col-3">تایم کل (ساعت): <span id="pv-c1-total">-</span></div>
+                        <div class="col-3">تایم مفید (کرنومتر): <b id="pv-c1-useful">-</b></div>
+                        <div class="col-3">استراحت/اتلاف وقت: <span id="pv-c1-wasted">-</span></div>
+                        <div class="col-3">بازدهی مطالعه: <b id="pv-c1-efficiency">-</b></div>
+                        <div class="col-12 mt-1">پارت‌های تست‌زنی: <div id="pv-c1-tests" class="text-muted small">-</div></div>
+                        <div class="col-12 mt-1">توضیحات: <span id="pv-c1-desc">-</span></div>
+                    </div>
+                </div>
+
+                <div class="pdf-course-box">
+                    <div class="pdf-course-title">۲- <span id="pv-c2-name">درس دوم</span></div>
+                    <div class="row g-1">
+                        <div class="col-3">ساعت شروع: <span id="pv-c2-start">-</span></div>
+                        <div class="col-3">ساعت پایان: <span id="pv-c2-end">-</span></div>
+                        <div class="col-3">تایم کل (ساعت): <span id="pv-c2-total">-</span></div>
+                        <div class="col-3">تایم مفید (کرنومتر): <b id="pv-c2-useful">-</b></div>
+                        <div class="col-3">استراحت/اتلاف وقت: <span id="pv-c2-wasted">-</span></div>
+                        <div class="col-3">بازدهی مطالعه: <b id="pv-c2-efficiency">-</b></div>
+                        <div class="col-12 mt-1">پارت‌های تست‌‌زنی: <div id="pv-c2-tests" class="text-muted small">-</div></div>
+                        <div class="col-12 mt-1">توضیحات: <span id="pv-c2-desc">-</span></div>
+                    </div>
+                </div>
+
+                <div class="pdf-course-box">
+                    <div class="pdf-course-title">۳- <span id="pv-c3-name">درس سوم</span></div>
+                    <div class="row g-1">
+                        <div class="col-3">ساعت شروع: <span id="pv-c3-start">-</span></div>
+                        <div class="col-3">ساعت پایان: <span id="pv-c3-end">-</span></div>
+                        <div class="col-3">تایم کل (ساعت): <span id="pv-c3-total">-</span></div>
+                        <div class="col-3">تایم مفید (کرنومتر): <b id="pv-c3-useful">-</b></div>
+                        <div class="col-3">استراحت/اتلاف وقت: <span id="pv-c3-wasted">-</span></div>
+                        <div class="col-3">بازدهی مطالعه: <b id="pv-c3-efficiency">-</b></div>
+                        <div class="col-12 mt-1">پارت‌های تست‌‌زنی: <div id="pv-c3-tests" class="text-muted small">-</div></div>
+                        <div class="col-12 mt-1">توضیحات: <span id="pv-c3-desc">-</span></div>
+                    </div>
+                </div>
+
+                <div class="pdf-course-box">
+                    <div class="pdf-course-title">۴- <span id="pv-c4-name">درس چهارم</span></div>
+                    <div class="row g-1">
+                        <div class="col-3">ساعت شروع: <span id="pv-c4-start">-</span></div>
+                        <div class="col-3">ساعت پایان: <span id="pv-c4-end">-</span></div>
+                        <div class="col-3">تایم کل (ساعت): <span id="pv-c4-total">-</span></div>
+                        <div class="col-3">تایم مفید (کرنومتر): <b id="pv-c4-useful">-</b></div>
+                        <div class="col-3">استراحت/اتلاف وقت: <span id="pv-c4-wasted">-</span></div>
+                        <div class="col-3">بازدهی مطالعه: <b id="pv-c4-efficiency">-</b></div>
+                        <div class="col-12 mt-1">پارت‌های تست‌زنی: <div id="pv-c4-tests" class="text-muted small">-</div></div>
+                        <div class="col-12 mt-1">توضیحات: <span id="pv-c4-desc">-</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-3 border-top pt-2">
+                <div class="row g-2">
+                    <div class="col-6">مجموع ساعت کل مطالعه: <b id="pv-sumTotalTime">-</b></div>
+                    <div class="col-6">مجموع ساعت مفید (کرنومتر): <b id="pv-sumUsefulTime">-</b></div>
+                    <div class="col-6">مجموع اتلاف وقت / استراحت: <span id="pv-sumWastedTime">-</span></div>
+                    <div class="col-6">میانگین بازدهی کل روز: <b id="pv-avgEfficiency">-</b></div>
+                    <div class="col-6">مجموع کل تست زده شده امروز: <b id="pv-totalDailyTests">-</b></div>
+                    <div class="col-6">نقاط قوت/ضعف امروز: <span id="pv-strengthsWeaknesses">-</span></div>
+                    <div class="col-6">درس عمومی خوانده شده: <span id="pv-generalSubject">-</span></div>
+                    <div class="col-6">مجموع تایم خواندن درس عمومی: <span id="pv-generalSubjectTime">-</span></div>
+                    <div class="col-6">برنامه امروز کامل شد؟ <b id="pv-programCompleted">-</b></div>
+                    <div class="col-12" id="pv-incompleteContainer" style="display: none;">چه چیزهایی کامل نشد؟ <span id="pv-incompleteReason" class="text-danger">-</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery and Persian Datepicker Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/persian-date@1.1.0/dist/persian-date.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/persian-datepicker@1.2.0/dist/js/persian-datepicker.min.js"></script>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 6;
+    const STORAGE_KEY = 'sadqe_report_form_data_v12';
+
+    let currentCourseIndex = null;
+    let timerInterval = null;
+    let totalSeconds = 0;
+    let isRunning = false;
+    let currentMode = 'stopwatch';
+    let targetSeconds = 0;
+
+    /* === THEME TOGGLE LOGIC === */
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('sadqe_theme', newTheme);
+        updateThemeButtonUI(newTheme);
+    }
+
+    function updateThemeButtonUI(theme) {
+        const icon = document.getElementById('themeIcon');
+        const text = document.getElementById('themeText');
+        if (theme === 'dark') {
+            icon.className = 'fa-solid fa-sun me-1';
+            text.innerText = 'حالت روشن';
+        } else {
+            icon.className = 'fa-solid fa-moon me-1';
+            text.innerText = 'حالت تاریک';
+        }
+    }
+
+    function initTheme() {
+        const savedTheme = localStorage.getItem('sadqe_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeButtonUI(savedTheme);
+    }
+
+    /* === UPDATE CLOCKS & DATES === */
+    function updateClocks() {
+        const now = new Date();
+        const digitalClock = document.getElementById('digital-clock');
+        if (digitalClock) {
+            digitalClock.innerText = now.toLocaleTimeString('en-GB', { hour12: false });
+        }
+
+        const daysEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const dayElEn = document.getElementById('day-name-en');
+        if (dayElEn) {
+            dayElEn.innerText = daysEn[now.getDay()];
+        }
+
+        const shamsiDateEl = document.getElementById('shamsi-date-display');
+        if (shamsiDateEl) {
+            try {
+                shamsiDateEl.innerText = new persianDate().format('YYYY/MM/DD');
+            } catch (e) {
+                shamsiDateEl.innerText = '';
+            }
+        }
+    }
+    setInterval(updateClocks, 1000);
+
+    function showStep(step) {
+        document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
+        document.getElementById(`step-${step}`).classList.add('active');
+
+        for(let i = 1; i <= totalSteps; i++) {
+            const pill = document.getElementById(`pill-${i}`);
+            if(i < step) {
+                pill.className = 'step-pill completed';
+            } else if(i === step) {
+                pill.className = 'step-pill active';
+            } else {
+                pill.className = 'step-pill';
+            }
+        }
+
+        document.getElementById('prevBtn').disabled = (step === 1);
+        if(step === totalSteps) {
+            document.getElementById('nextBtn').style.display = 'none';
+            calculateDailyTotals();
+        } else {
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+    }
+
+    function nextPrev(n) {
+        currentStep += n;
+        if (currentStep > totalSteps) currentStep = totalSteps;
+        if (currentStep < 1) currentStep = 1;
+        showStep(currentStep);
+    }
+
+    /* === CALCULATE SLEEP TIME === */
+    function calculateSleepDuration() {
+        const sleepStr = document.getElementById('sleepTime').value;
+        const wakeStr = document.getElementById('wakeTime').value;
+        if (sleepStr && wakeStr) {
+            let sleepMins = timeToMinutes(sleepStr);
+            let wakeMins = timeToMinutes(wakeStr);
+            if (wakeMins < sleepMins) wakeMins += 24 * 60;
+            const diff = wakeMins - sleepMins;
+            document.getElementById('totalSleep').value = minutesToHHMM(diff);
+        }
+    }
+
+    document.querySelectorAll('.sleep-calc-field').forEach(el => {
+        el.addEventListener('input', calculateSleepDuration);
+    });
+
+    /* === DYNAMIC TEST ROWS === */
+    function addTestRow(courseNum, tests = '', correct = '', wrong = '') {
+        const container = document.getElementById(`c${courseNum}_testRowsContainer`);
+        const rowId = 'test_row_' + Math.random().toString(36).substr(2, 9);
+        
+        const html = `
+            <div class="row g-2 align-items-center mb-2 p-2 border rounded test-row-item" id="${rowId}">
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-0">تعداد کل تست</label>
+                    <input type="number" class="form-control form-control-sm test-input-t save-test" value="${tests}" oninput="calculateRowPercentages('${rowId}', ${courseNum})">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-0">پاسخ صحیح</label>
+                    <input type="number" class="form-control form-control-sm test-input-c save-test" value="${correct}" oninput="calculateRowPercentages('${rowId}', ${courseNum})">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small text-muted mb-0">پاسخ غلط</label>
+                    <input type="number" class="form-control form-control-sm test-input-w save-test" value="${wrong}" oninput="calculateRowPercentages('${rowId}', ${courseNum})">
+                </div>
+                <div class="col-md-3 d-flex flex-column justify-content-end">
+                    <button type="button" class="btn btn-sm btn-outline-danger mt-4" onclick="removeTestRow('${rowId}', ${courseNum})"><i class="fa-solid fa-trash"></i> حذف پارت</button>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <span class="small text-primary fw-bold">درصد خام: <span class="row-raw-pct">0%</span></span>
+                </div>
+                <div class="col-md-6 mt-2">
+                    <span class="small text-success fw-bold">درصد نهایی (منفی‌دار): <span class="row-final-pct">0%</span></span>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', html);
+        calculateRowPercentages(rowId, courseNum);
+    }
+
+    function removeTestRow(rowId, courseNum) {
+        document.getElementById(rowId).remove();
+        calculateDailyTotals();
+        updatePreview();
+        saveToLocalStorage();
+    }
+
+    function calculateRowPercentages(rowId, courseNum) {
+        const row = document.getElementById(rowId);
+        const t = parseFloat(row.querySelector('.test-input-t').value) || 0;
+        const c = parseFloat(row.querySelector('.test-input-c').value) || 0;
+        const w = parseFloat(row.querySelector('.test-input-w').value) || 0;
+
+        let rawPct = 0;
+        let finalPct = 0;
+
+        if (t > 0) {
+            rawPct = (c / t) * 100;
+            row.querySelector('.row-raw-pct').innerText = rawPct.toFixed(1) + '%';
+        } else {
+            row.querySelector('.row-raw-pct').innerText = '0%';
+        }
+
+        if (t > 0) {
+            finalPct = ((c * 3) - w) / (t * 3) * 100;
+            row.querySelector('.row-final-pct').innerText = finalPct.toFixed(1) + '%';
+        } else {
+            row.querySelector('.row-final-pct').innerText = '0%';
+        }
+
+        calculateDailyTotals();
+        updatePreview();
+        saveToLocalStorage();
+    }
+
+    /* === STUDIESTIMER LOGIC === */
+    function openFocusMode(courseNum) {
+        currentCourseIndex = courseNum;
+        const courseName = document.getElementById(`c${courseNum}_name`).value || `Course ${courseNum}`;
+        document.getElementById('focusCourseBadge').innerText = courseName;
+        document.getElementById('focusOverlay').classList.add('active');
+        updateClocks();
+        switchMode('stopwatch');
+    }
+
+    function closeFocusMode() {
+        pauseTimer();
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
+        }
+        document.getElementById('focusOverlay').classList.remove('active');
+        document.getElementById('focusOverlay').classList.remove('mini-mode');
+    }
+
+    function switchMode(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.studiestimer-nav-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(`tab-${mode}`).classList.add('active');
+
+        const presetPills = document.getElementById('presetPills');
+        const subtitle = document.getElementById('modeSubtitle');
+
+        if (mode === 'stopwatch') {
+            subtitle.innerText = 'STOPWATCH MODE';
+            presetPills.style.display = 'none';
+            totalSeconds = 0;
+        } else if (mode === 'timer') {
+            subtitle.innerText = 'SET DURATION';
+            presetPills.style.display = 'flex';
+            targetSeconds = 0;
+            totalSeconds = 0;
+        }
+        resetTimer();
+        renderTimerDisplay();
+    }
+
+    function setPresetMins(mins) {
+        targetSeconds = mins * 60;
+        totalSeconds = targetSeconds;
+        renderTimerDisplay();
+    }
+
+    function setCustomMins() {
+        const val = parseInt(document.getElementById('customMinsInput').value);
+        if(val && val > 0) {
+            setPresetMins(val);
+        }
+    }
+
+    function renderTimerDisplay() {
+        let h = Math.floor(totalSeconds / 3600);
+        let m = Math.floor((totalSeconds % 3600) / 60);
+        let s = totalSeconds % 60;
+        document.getElementById('timerDisplay').innerText = `${h} : ${m} : ${s}`;
+    }
+
+    function toggleStartPause() {
+        if (isRunning) {
+            pauseTimer();
+        } else {
+            startTimer();
+        }
+    }
+
+    function startTimer() {
+        isRunning = true;
+        document.getElementById('startBtnIcon').className = 'fa-solid fa-pause';
+        document.getElementById('startBtnText').innerText = 'Pause Timer';
+
+        timerInterval = setInterval(() => {
+            if (currentMode === 'stopwatch') {
+                totalSeconds++;
+            } else {
+                if (totalSeconds > 0) {
+                    totalSeconds--;
+                } else {
+                    pauseTimer();
+                    alert('Timer finished!');
+                }
+            }
+            renderTimerDisplay();
+        }, 1000);
+    }
+
+    function pauseTimer() {
+        isRunning = false;
+        clearInterval(timerInterval);
+        document.getElementById('startBtnIcon').className = 'fa-solid fa-play';
+        document.getElementById('startBtnText').innerText = (currentMode === 'stopwatch') ? 'Start Stopwatch' : 'Start Timer';
+    }
+
+    function resetTimer() {
+        pauseTimer();
+        if (currentMode === 'timer') {
+            totalSeconds = targetSeconds;
+        } else {
+            totalSeconds = 0;
+        }
+        renderTimerDisplay();
+    }
+
+    function toggleFullscreen() {
+        const elem = document.getElementById('focusOverlay');
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen().catch(err => alert(`امکان تمام صفحه شدن مرورگر وجود ندارد`));
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    function toggleMiniMode(enableMini) {
+        const elem = document.getElementById('focusOverlay');
+        if (enableMini === undefined) {
+            elem.classList.toggle('mini-mode');
+        } else if (enableMini) {
+            elem.classList.add('mini-mode');
+        } else {
+            elem.classList.remove('mini-mode');
+        }
+    }
+
+    function applyTimerToCourse() {
+        if (currentCourseIndex) {
+            let trackedSecs = 0;
+            if (currentMode === 'stopwatch') {
+                trackedSecs = totalSeconds;
+            } else {
+                trackedSecs = targetSeconds - totalSeconds;
+            }
+
+            if (trackedSecs < 0) trackedSecs = 0;
+
+            const h = Math.floor(trackedSecs / 3600);
+            const m = Math.floor((trackedSecs % 3600) / 60);
+            const formatted = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+
+            document.getElementById(`c${currentCourseIndex}_usefulTime`).value = formatted;
+            calculateCourseTime(currentCourseIndex);
+            closeFocusMode();
+            saveToLocalStorage();
+        }
+    }
+
+    function timeToMinutes(timeStr) {
+        if(!timeStr || !timeStr.includes(':')) return 0;
+        const [h, m] = timeStr.split(':').map(Number);
+        return (h * 60) + (m || 0);
+    }
+
+    function minutesToHHMM(mins) {
+        if(mins < 0 || isNaN(mins)) return "00:00";
+        const h = Math.floor(mins / 60);
+        const m = mins % 60;
+        return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+    }
+
+    function calculateCourseTime(num) {
+        const start = document.getElementById(`c${num}_start`).value;
+        const end = document.getElementById(`c${num}_end`).value;
+        const usefulStr = document.getElementById(`c${num}_usefulTime`).value;
+
+        if(start && end) {
+            let startMins = timeToMinutes(start);
+            let endMins = timeToMinutes(end);
+            if(endMins < startMins) endMins += 24 * 60;
+            
+            const totalMins = endMins - startMins;
+            document.getElementById(`c${num}_totalTime`).value = minutesToHHMM(totalMins);
+
+            if(usefulStr) {
+                const usefulMins = timeToMinutes(usefulStr);
+                const wastedMins = totalMins - usefulMins;
+                const efficiency = totalMins > 0 ? Math.round((usefulMins / totalMins) * 100) : 0;
+
+                document.getElementById(`c${num}_wastedDisplay`).innerText = minutesToHHMM(wastedMins);
+                document.getElementById(`c${num}_efficiencyDisplay`).innerText = `${efficiency}%`;
+            }
+        }
+        updatePreview();
+    }
+
+    [1, 2, 3, 4].forEach(num => {
+        document.querySelectorAll(`.calc-time${num}`).forEach(el => {
+            el.addEventListener('change', () => calculateCourseTime(num));
+        });
+    });
+
+    function toggleIncompleteBox() {
+        const status = document.getElementById('programCompleted').value;
+        const container = document.getElementById('incompleteBoxContainer');
+        if (status === 'خیر' || status === 'تا حدودی') {
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+            document.getElementById('incompleteReason').value = '';
+        }
+        updatePreview();
+    }
+
+    function calculateDailyTotals() {
+        let sumTotalMins = 0;
+        let sumUsefulMins = 0;
+        let totalEfficiencySum = 0;
+        let courseCount = 0;
+        let totalTestsAllCourses = 0;
+
+        [1, 2, 3, 4].forEach(n => {
+            const tot = timeToMinutes(document.getElementById(`c${n}_totalTime`).value);
+            const use = timeToMinutes(document.getElementById(`c${n}_usefulTime`).value);
+            
+            if(tot > 0) {
+                sumTotalMins += tot;
+                sumUsefulMins += use;
+                totalEfficiencySum += tot > 0 ? (use / tot) * 100 : 0;
+                courseCount++;
+            }
+        });
+
+        const wastedMins = sumTotalMins - sumUsefulMins;
+        const avgEfficiency = courseCount > 0 ? Math.round(totalEfficiencySum / courseCount) : 0;
+
+        [1, 2, 3, 4].forEach(n => {
+            const container = document.getElementById(`c${n}_testRowsContainer`);
+            if (container) {
+                container.querySelectorAll('.test-row-item').forEach(r => {
+                    const t = parseFloat(r.querySelector('.test-input-t').value) || 0;
+                    totalTestsAllCourses += t;
+                });
+            }
+        });
+
+        document.getElementById('sumTotalTimeDisplay').innerText = minutesToHHMM(sumTotalMins);
+        document.getElementById('sumUsefulTimeDisplay').innerText = minutesToHHMM(sumUsefulMins);
+        document.getElementById('sumWastedTimeDisplay').innerText = minutesToHHMM(wastedMins);
+        document.getElementById('avgEfficiencyDisplay').innerText = `${avgEfficiency}%`;
+
+        document.getElementById('totalStudyTime').value = minutesToHHMM(sumUsefulMins);
+        document.getElementById('totalDailyTests').value = totalTestsAllCourses;
+
+        document.getElementById('pv-sumTotalTime').innerText = minutesToHHMM(sumTotalMins);
+        document.getElementById('pv-sumUsefulTime').innerText = minutesToHHMM(sumUsefulMins);
+        document.getElementById('pv-sumWastedTime').innerText = minutesToHHMM(wastedMins);
+        document.getElementById('pv-avgEfficiency').innerText = `${avgEfficiency}%`;
+        document.getElementById('pv-totalDailyTests').innerText = totalTestsAllCourses;
+    }
+
+    function updatePreview() {
+        const bind = (inputId, previewId) => {
+            const val = document.getElementById(inputId)?.value || '---';
+            const el = document.getElementById(previewId);
+            if(el) el.innerText = val || '---';
+        };
+
+        bind('studentName', 'pv-studentName');
+        bind('reportType', 'pv-reportType');
+        bind('dayName', 'pv-dayName');
+        bind('reportDate', 'pv-reportDate');
+        bind('fromSession', 'pv-fromSession');
+        bind('toSession', 'pv-toSession');
+        bind('stepName', 'pv-stepName');
+        bind('sleepTime', 'pv-sleepTime');
+        bind('wakeTime', 'pv-wakeTime');
+        bind('totalSleep', 'pv-totalSleep');
+        bind('studyStartTime', 'pv-studyStartTime');
+        bind('screenTime', 'pv-screenTime');
+        bind('napTime', 'pv-napTime');
+        bind('outTime', 'pv-outTime');
+
+        [1, 2, 3, 4].forEach(n => {
+            bind(`c${n}_name`, `pv-c${n}-name`);
+            bind(`c${n}_start`, `pv-c${n}-start`);
+            bind(`c${n}_end`, `pv-c${n}-end`);
+            bind(`c${n}_totalTime`, `pv-c${n}-total`);
+            bind(`c${n}_usefulTime`, `pv-c${n}-useful`);
+            
+            const wasted = document.getElementById(`c${n}_wastedDisplay`)?.innerText || '-';
+            const eff = document.getElementById(`c${n}_efficiencyDisplay`)?.innerText || '-';
+            document.getElementById(`pv-c${n}-wasted`).innerText = wasted;
+            document.getElementById(`pv-c${n}-efficiency`).innerText = eff;
+
+            const container = document.getElementById(`c${n}_testRowsContainer`);
+            let testSummaryText = '';
+            let courseTotalTests = 0;
+            if (container) {
+                const rows = container.querySelectorAll('.test-row-item');
+                rows.forEach((r, idx) => {
+                    const t = parseFloat(r.querySelector('.test-input-t').value) || 0;
+                    const c = r.querySelector('.row-raw-pct').innerText;
+                    const f = r.querySelector('.row-final-pct').innerText;
+                    if(t > 0) {
+                        courseTotalTests += t;
+                        testSummaryText += `[پارت ${idx+1}: تست ${t} | خام: ${c} | نهایی: ${f}] `;
+                    }
+                });
+            }
+            if (courseTotalTests > 0) {
+                testSummaryText += ` | **مجموع تست این درس: ${courseTotalTests}**`;
+            }
+            document.getElementById(`pv-c${n}-tests`).innerHTML = testSummaryText || 'تستی ثبت نشده';
+            bind(`c${n}_desc`, `pv-c${n}-desc`);
+        });
+
+        bind('strengthsWeaknesses', 'pv-strengthsWeaknesses');
+        bind('generalSubject', 'pv-generalSubject');
+        bind('generalSubjectTime', 'pv-generalSubjectTime');
+        bind('programCompleted', 'pv-programCompleted');
+
+        const status = document.getElementById('programCompleted').value;
+        const pvIncompleteContainer = document.getElementById('pv-incompleteContainer');
+        if (status === 'خیر' || status === 'تا حدودی') {
+            pvIncompleteContainer.style.display = 'block';
+            bind('incompleteReason', 'pv-incompleteReason');
+        } else {
+            pvIncompleteContainer.style.display = 'none';
+        }
+    }
+
+    function saveToLocalStorage() {
+        const formData = {};
+        document.querySelectorAll('.save-auto').forEach(el => {
+            formData[el.id] = el.value;
+        });
+
+        [1, 2, 3, 4].forEach(n => {
+            const rows = document.querySelectorAll(`#c${n}_testRowsContainer .test-row-item`);
+            const rowData = [];
+            rows.forEach(r => {
+                rowData.push({
+                    t: r.querySelector('.test-input-t').value,
+                    c: r.querySelector('.test-input-c').value,
+                    w: r.querySelector('.test-input-w').value
+                });
+            });
+            formData[`c${n}_testRows`] = rowData;
+        });
+
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    }
+
+    function loadFromLocalStorage() {
+        const savedData = localStorage.getItem(STORAGE_KEY);
+        if (savedData) {
+            const formData = JSON.parse(savedData);
+            Object.keys(formData).forEach(id => {
+                if(!id.includes('_testRows')) {
+                    const el = document.getElementById(id);
+                    if (el) el.value = formData[id];
+                }
+            });
+
+            [1, 2, 3, 4].forEach(n => {
+                if(formData[`c${n}_testRows`]) {
+                    const container = document.getElementById(`c${n}_testRowsContainer`);
+                    container.innerHTML = '';
+                    formData[`c${n}_testRows`].forEach(item => {
+                        addTestRow(n, item.t, item.c, item.w);
+                    });
+                } else {
+                    addTestRow(n);
+                }
+                calculateCourseTime(n);
+            });
+            calculateSleepDuration();
+            toggleIncompleteBox();
+            updatePreview();
+        } else {
+            const todayPersian = new persianDate().format('YYYY/MM/DD');
+            document.getElementById('reportDate').value = todayPersian;
+            document.getElementById('fromSession').value = todayPersian;
+            document.getElementById('toSession').value = todayPersian;
+            calculateSleepDuration();
+            [1, 2, 3, 4].forEach(n => addTestRow(n));
+        }
+    }
+
+    function clearFormData() {
+        if (confirm('آیا مطمئن هستید که می‌خواهید همه اطلاعات فرم و تایمرها پاک شوند؟')) {
+            localStorage.removeItem(STORAGE_KEY);
+            document.querySelectorAll('.save-auto').forEach(el => {
+                if (el.id !== 'studentName') {
+                    el.value = '';
+                }
+            });
+            const todayPersian = new persianDate().format('YYYY/MM/DD');
+            document.getElementById('reportDate').value = todayPersian;
+            document.getElementById('fromSession').value = todayPersian;
+            document.getElementById('toSession').value = todayPersian;
+            calculateSleepDuration();
+
+            [1, 2, 3, 4].forEach(n => {
+                document.getElementById(`c${n}_wastedDisplay`).innerText = '-';
+                document.getElementById(`c${n}_efficiencyDisplay`).innerText = '-';
+                document.getElementById(`c${n}_testRowsContainer`).innerHTML = '';
+                addTestRow(n);
+            });
+            toggleIncompleteBox();
+            updatePreview();
+            alert('اطلاعات با موفقیت پاک شدند.');
+        }
+    }
+
+    function downloadPDF() {
+        calculateDailyTotals();
+        const day = document.getElementById('dayName').value.trim() || 'گزارش_کار';
+        const date = document.getElementById('reportDate').value.trim().replace(/\//g, '-');
+        
+        const originalTitle = document.title;
+        document.title = `${day} ${date}`;
+        
+        window.print();
+        
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 1000);
+    }
+
+    $(document).ready(function() {
+        initTheme();
+        loadFromLocalStorage();
+        updateClocks();
+
+        $('#reportDate, #fromSession, #toSession').persianDatepicker({
+            format: 'YYYY/MM/DD',
+            initialValue: false,
+            autoClose: true,
+            onSelect: function(unix) {
+                updatePreview();
+                saveToLocalStorage();
+            }
+        });
+    });
+
+    document.getElementById('reportForm').addEventListener('input', () => {
+        updatePreview();
+        saveToLocalStorage();
+    });
+</script>
+
+</body>
+</html>
